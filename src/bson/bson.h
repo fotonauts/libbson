@@ -44,6 +44,7 @@
 #include "bson-value.h"
 #include "bson-version.h"
 #include "bson-writer.h"
+#include "bcon.h"
 
 #undef BSON_INSIDE
 
@@ -187,7 +188,7 @@ bson_new (void);
 
 bson_t *
 bson_new_from_json (const uint8_t *data,
-                    size_t         len,
+                    ssize_t        len,
                     bson_error_t  *error);
 
 
@@ -211,9 +212,9 @@ bson_init_from_json (bson_t        *bson,
  * Returns: true if initialized successfully; otherwise false.
  */
 bool
-bson_init_static (bson_t             *b,
-                  const uint8_t      *data,
-                  uint32_t            length);
+bson_init_static (bson_t        *b,
+                  const uint8_t *data,
+                  size_t         length);
 
 
 /**
@@ -260,7 +261,7 @@ bson_reinit (bson_t *b);
  */
 bson_t *
 bson_new_from_data (const uint8_t *data,
-                    uint32_t       length);
+                    size_t         length);
 
 
 /**
@@ -513,12 +514,12 @@ bson_append_array (bson_t       *bson,
  * Returns: true if successful; false if append would overflow max size.
  */
 bool
-bson_append_binary (bson_t             *bson,
-                    const char         *key,
-                    size_t              key_length,
-                    bson_subtype_t      subtype,
-                    const uint8_t      *binary,
-                    size_t              length);
+bson_append_binary (bson_t         *bson,
+                    const char     *key,
+                    size_t          key_length,
+                    bson_subtype_t  subtype,
+                    const uint8_t  *binary,
+                    size_t          length);
 
 
 /**
