@@ -96,7 +96,7 @@ _bson_impl_inline_grow (bson_impl_inline_t *impl, /* IN */
    BSON_ASSERT (!(impl->flags & BSON_FLAG_RDONLY));
    BSON_ASSERT (!(impl->flags & BSON_FLAG_CHILD));
 
-   if ((impl->len + size) <= sizeof impl->data) {
+   if (((size_t)impl->len + size) <= sizeof impl->data) {
       return true;
    }
 
@@ -153,7 +153,7 @@ _bson_impl_alloc_grow (bson_impl_alloc_t *impl, /* IN */
     * Determine how many bytes we need for this document in the buffer
     * including necessary trailing bytes for parent documents.
     */
-   req = impl->offset + impl->len + size + impl->depth;
+   req = (impl->offset + impl->len + size + impl->depth);
 
    if (req <= *impl->buflen) {
       return true;
@@ -161,7 +161,7 @@ _bson_impl_alloc_grow (bson_impl_alloc_t *impl, /* IN */
 
    req = bson_next_power_of_two (req);
 
-   if (req <= INT32_MAX && impl->realloc) {
+   if ((req <= INT32_MAX) && impl->realloc) {
       *impl->buf = impl->realloc (*impl->buf, req, impl->realloc_func_ctx);
       *impl->buflen = req;
       return true;
@@ -2005,7 +2005,7 @@ bson_copy_to (const bson_t *src,
    }
 
    data = _bson_data (src);
-   len = bson_next_power_of_two (src->len);
+   len = bson_next_power_of_two ((size_t)src->len);
 
    adst = (bson_impl_alloc_t *)dst;
    adst->flags = BSON_FLAG_STATIC;

@@ -496,6 +496,9 @@ bson_next_power_of_two (size_t v)
    v |= v >> 4;
    v |= v >> 8;
    v |= v >> 16;
+#if BSON_WORD_SIZE == 64
+   v |= v >> 32;
+#endif
    v++;
 
    return v;
