@@ -422,7 +422,7 @@ bson_has_field (const bson_t *bson,
  *
  * Returns: Less than zero, zero, or greater than zero.
  */
-int
+ssize_t
 bson_compare (const bson_t *bson,
               const bson_t *other);
 

@@ -2217,7 +2217,7 @@ bson_has_field (const bson_t *bson,
 }
 
 
-int
+ssize_t
 bson_compare (const bson_t *bson,
               const bson_t *other)
 {
