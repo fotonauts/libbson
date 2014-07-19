@@ -45,6 +45,7 @@ bson_iter_init (bson_iter_t  *iter, /* OUT */
    bson_return_val_if_fail (bson, false);
 
    if (BSON_UNLIKELY (bson->len < 5)) {
+      memset (iter, 0, sizeof *iter);
       return false;
    }
 
@@ -195,15 +196,23 @@ _bson_iter_find_with_len (bson_iter_t *iter,   /* INOUT */
                           const char  *key,    /* IN */
                           int          keylen) /* IN */
 {
+   const char *ikey;
+
    bson_return_val_if_fail (iter, false);
    bson_return_val_if_fail (key, false);
+
+   if (keylen == 0) {
+      return false;
+   }
 
    if (keylen < 0) {
       keylen = (int)strlen (key);
    }
 
    while (bson_iter_next (iter)) {
-      if (!strncmp (key, bson_iter_key (iter), keylen)) {
+      ikey = bson_iter_key (iter);
+
+      if ((0 == strncmp (key, ikey, keylen)) && (ikey [keylen] == '\0')) {
          return true;
       }
    }
@@ -1233,12 +1242,6 @@ bson_iter_codewscope (const bson_iter_t  *iter,      /* IN */
 }
 
 
-/**
- * bson_iter_dbpointer:
- *
- *
- *
- */
 /*
  *--------------------------------------------------------------------------
  *

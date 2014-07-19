@@ -16,8 +16,8 @@
 
 
 /*
- * This program will print each BSON document contained in the provided files
- * as a JSON string to STDOUT.
+ * This program will print each JSON document contained in the provided files
+ * as a BSON string to STDOUT.
  */
 
 
@@ -65,7 +65,7 @@ main (int   argc,
       }
 
       /*
-       * Convert each incoming document to JSON and print to stdout.
+       * Convert each incoming document to BSON and print to stdout.
        */
       while ((b = bson_json_reader_read (reader, &doc, &error))) {
          if (b < 0) {
@@ -73,7 +73,10 @@ main (int   argc,
             abort ();
          }
 
-         fwrite (bson_get_data(&doc), 1, doc.len, stdout);
+         if (fwrite (bson_get_data(&doc), 1, doc.len, stdout) != doc.len) {
+            fprintf (stderr, "Failed to write to stdout, exiting.\n");
+            exit (1);
+         }
          bson_reinit (&doc);
       }
 

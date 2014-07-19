@@ -16,6 +16,7 @@
 
 
 #include <stdarg.h>
+#include <string.h>
 
 #include "b64_ntop.h"
 #include "bson.h"
@@ -448,7 +449,9 @@ _bson_append_bson_begin (bson_t      *bson,        /* IN */
     */
    if ((bson->flags & BSON_FLAG_INLINE)) {
       BSON_ASSERT (bson->len <= 120);
-      _bson_grow (bson, 128 - bson->len);
+      if (!_bson_grow (bson, 128 - bson->len)) {
+         return false;
+      }
       BSON_ASSERT (!(bson->flags & BSON_FLAG_INLINE));
    }
 
@@ -717,6 +720,24 @@ bson_append_array (bson_t       *bson,       /* IN */
 
    if (key_length == SIZE_T_MAX) {
       key_length = strlen (key);
+   }
+
+   /*
+    * Let's be a bit pedantic and ensure the array has properly formatted key
+    * names.  We will verify this simply by checking the first element for "0"
+    * if the array is non-empty.
+    */
+   if (array && !bson_empty (array)) {
+      bson_iter_t iter;
+
+      if (bson_iter_init (&iter, array) && bson_iter_next (&iter)) {
+         if (0 != strcmp ("0", bson_iter_key (&iter))) {
+            fprintf (stderr,
+                     "%s(): invalid array detected. first element of array "
+                     "parameter is not \"0\".\n",
+                     __FUNCTION__);
+         }
+      }
    }
 
    return _bson_append (bson, 4,
@@ -2200,17 +2221,26 @@ int
 bson_compare (const bson_t *bson,
               const bson_t *other)
 {
-   uint32_t len;
+   const uint8_t *data1;
+   const uint8_t *data2;
+   size_t len1;
+   size_t len2;
    int ret;
 
-   if (bson->len != other->len) {
-      len = MIN (bson->len, other->len);
+   data1 = _bson_data (bson) + 4;
+   len1 = bson->len - 4;
 
-      if (!(ret = memcmp (_bson_data (bson), _bson_data (other), len))) {
-         ret = bson->len - other->len;
-      }
-   } else {
-      ret = memcmp (_bson_data (bson), _bson_data (other), bson->len);
+   data2 = _bson_data (other) + 4;
+   len2 = other->len - 4;
+
+   if (len1 == len2) {
+      return memcmp (data1, data2, len1);
+   }
+
+   ret = memcmp (data1, data2, MIN (len1, len2));
+
+   if (ret == 0) {
+      return len1 - len2;
    }
 
    return ret;
@@ -2236,12 +2266,16 @@ _bson_as_json_visit_utf8 (const bson_iter_t *iter,
    char *escaped;
 
    escaped = bson_utf8_escape_for_json (v_utf8, v_utf8_len);
-   bson_string_append (state->str, "\"");
-   bson_string_append (state->str, escaped);
-   bson_string_append (state->str, "\"");
-   bson_free (escaped);
 
-   return false;
+   if (escaped) {
+      bson_string_append (state->str, "\"");
+      bson_string_append (state->str, escaped);
+      bson_string_append (state->str, "\"");
+      bson_free (escaped);
+      return false;
+   }
+
+   return true;
 }
 
 
@@ -2498,10 +2532,14 @@ _bson_as_json_visit_before (const bson_iter_t *iter,
 
    if (state->keys) {
       escaped = bson_utf8_escape_for_json (key, -1);
-      bson_string_append (state->str, "\"");
-      bson_string_append (state->str, escaped);
-      bson_string_append (state->str, "\" : ");
-      bson_free (escaped);
+      if (escaped) {
+         bson_string_append (state->str, "\"");
+         bson_string_append (state->str, escaped);
+         bson_string_append (state->str, "\" : ");
+         bson_free (escaped);
+      } else {
+         return true;
+      }
    }
 
    state->count++;
@@ -2518,12 +2556,19 @@ _bson_as_json_visit_code (const bson_iter_t *iter,
                           void              *data)
 {
    bson_json_state_t *state = data;
+   char *escaped;
 
-   bson_string_append (state->str, "\"");
-   bson_string_append (state->str, v_code);
-   bson_string_append (state->str, "\"");
+   escaped = bson_utf8_escape_for_json (v_code, v_code_len);
 
-   return false;
+   if (escaped) {
+      bson_string_append (state->str, "\"");
+      bson_string_append (state->str, escaped);
+      bson_string_append (state->str, "\"");
+      bson_free (escaped);
+      return false;
+   }
+
+   return true;
 }
 
 
@@ -2553,12 +2598,19 @@ _bson_as_json_visit_codewscope (const bson_iter_t *iter,
                                 void              *data)
 {
    bson_json_state_t *state = data;
+   char *escaped;
 
-   bson_string_append (state->str, "\"");
-   bson_string_append (state->str, v_code);
-   bson_string_append (state->str, "\"");
+   escaped = bson_utf8_escape_for_json (v_code, v_code_len);
 
-   return false;
+   if (escaped) {
+      bson_string_append (state->str, "\"");
+      bson_string_append (state->str, escaped);
+      bson_string_append (state->str, "\"");
+      bson_free (escaped);
+      return false;
+   }
+
+   return true;
 }
 
 
@@ -2660,7 +2712,7 @@ bson_as_json (const bson_t *bson,
 
    if (bson_empty0 (bson)) {
       if (length) {
-         *length = 2;
+         *length = 3;
       }
 
       return bson_strdup ("{ }");
@@ -2674,9 +2726,12 @@ bson_as_json (const bson_t *bson,
    state.keys = true;
    state.str = bson_string_new ("{ ");
    state.depth = 0;
-   bson_iter_visit_all (&iter, &bson_as_json_visitors, &state);
 
-   if (iter.err_off) {
+   if (bson_iter_visit_all (&iter, &bson_as_json_visitors, &state) ||
+       iter.err_off) {
+      /*
+       * We were prematurely exited due to corruption or failed visitor.
+       */
       bson_string_free (state.str, true);
       if (length) {
          *length = 0;
@@ -2685,6 +2740,59 @@ bson_as_json (const bson_t *bson,
    }
 
    bson_string_append (state.str, " }");
+
+   if (length) {
+      *length = state.str->len;
+   }
+
+   return bson_string_free (state.str, false);
+}
+
+
+char *
+bson_array_as_json (const bson_t *bson,
+                    size_t       *length)
+{
+   bson_json_state_t state;
+   bson_iter_t iter;
+
+   bson_return_val_if_fail (bson, NULL);
+
+   if (length) {
+      *length = 0;
+   }
+
+   if (bson_empty0 (bson)) {
+      if (length) {
+         *length = 3;
+      }
+
+      return bson_strdup ("[ ]");
+   }
+
+   if (!bson_iter_init (&iter, bson)) {
+      return NULL;
+   }
+
+   state.count = 0;
+   state.keys = false;
+   state.str = bson_string_new ("[ ");
+   state.depth = 0;
+   bson_iter_visit_all (&iter, &bson_as_json_visitors, &state);
+
+   if (bson_iter_visit_all (&iter, &bson_as_json_visitors, &state) ||
+       iter.err_off) {
+      /*
+       * We were prematurely exited due to corruption or failed visitor.
+       */
+      bson_string_free (state.str, true);
+      if (length) {
+         *length = 0;
+      }
+      return NULL;
+   }
+
+   bson_string_append (state.str, " ]");
 
    if (length) {
       *length = state.str->len;
