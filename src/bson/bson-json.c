@@ -176,6 +176,38 @@ typedef struct
 } bson_json_reader_handle_fd_t;
 
 
+static void *
+bson_yajl_malloc_func (void   *ctx,
+                       size_t  sz)
+{
+   return bson_malloc (sz);
+}
+
+
+static void
+bson_yajl_free_func (void *ctx,
+                     void *ptr)
+{
+   bson_free (ptr);
+}
+
+
+static void *
+bson_yajl_realloc_func (void   *ctx,
+                        void   *ptr,
+                        size_t  sz)
+{
+   return bson_realloc (ptr, sz);
+}
+
+
+static yajl_alloc_funcs gYajlAllocFuncs = {
+   bson_yajl_malloc_func,
+   bson_yajl_realloc_func,
+   bson_yajl_free_func,
+};
+
+
 #define STACK_ELE(_delta, _name) (bson->stack[(_delta) + bson->n]._name)
 #define STACK_BSON(_delta) \
       (((_delta) + bson->n) == 0 ? bson->bson : &STACK_ELE (_delta, bson))
@@ -228,6 +260,10 @@ typedef struct
 #define BASIC_YAJL_CB_BAIL_IF_NOT_NORMAL(_type) \
    if (bson->read_state != BSON_JSON_REGULAR) { \
       _bson_json_read_set_error (reader, "Invalid read of %s in state %d", \
+                                 (_type), bson->read_state); \
+      return 0; \
+   } else if (! key) { \
+      _bson_json_read_set_error (reader, "Invalid read of %s without key in state %d", \
                                  (_type), bson->read_state); \
       return 0; \
    }
@@ -388,6 +424,8 @@ _bson_json_read_integer (void    *_ctx, /* IN */
    bs = bson->bson_state;
 
    if (rs == BSON_JSON_REGULAR) {
+      BASIC_YAJL_CB_BAIL_IF_NOT_NORMAL ("integer");
+
       if (val <= INT32_MAX) {
          bson_append_int32 (STACK_BSON_CHILD, key, (int)len, (int)val);
       } else {
@@ -466,6 +504,7 @@ _bson_json_read_string (void                *_ctx, /* IN */
    bs = bson->bson_state;
 
    if (rs == BSON_JSON_REGULAR) {
+      BASIC_YAJL_CB_BAIL_IF_NOT_NORMAL ("string");
       bson_append_utf8 (STACK_BSON_CHILD, key, (int)len, (const char *)val, (int)vlen);
    } else if (rs == BSON_JSON_IN_BSON_TYPE || rs ==
               BSON_JSON_IN_BSON_TYPE_TIMESTAMP_VALUES) {
@@ -896,7 +935,11 @@ _bson_json_read_end_array (void *_ctx) /* IN */
    bson_json_reader_t *reader = (bson_json_reader_t *)_ctx;
    bson_json_reader_bson_t *bson = &reader->bson;
 
-   BASIC_YAJL_CB_BAIL_IF_NOT_NORMAL ("]");
+   if (bson->read_state != BSON_JSON_REGULAR) {
+      _bson_json_read_set_error (reader, "Invalid read of %s in state %d",
+                                 "]", bson->read_state);
+      return 0;
+   }
 
    STACK_POP_ARRAY (bson_append_array_end (STACK_BSON_PARENT,
                                            STACK_BSON_CHILD));
@@ -1088,7 +1131,7 @@ bson_json_reader_new (void                 *data,           /* IN */
    p->buf = bson_malloc (buf_size);
    p->buf_size = buf_size ? buf_size : BSON_JSON_DEFAULT_BUF_SIZE;
 
-   r->yh = yajl_alloc (&read_cbs, NULL, r);
+   r->yh = yajl_alloc (&read_cbs, &gYajlAllocFuncs, r);
 
    yajl_config (r->yh,
                 yajl_dont_validate_strings |

@@ -414,12 +414,28 @@ test_bson_json_read_missing_complex(void)
 static void
 test_bson_json_read_invalid_json(void)
 {
-   const char * json = "{ \n\
+   const char *json = "{ \n\
       \"foo\" : { \n\
    }";
+   bson_t *b;
 
    test_bson_json_error (json, BSON_ERROR_JSON,
                          BSON_JSON_ERROR_READ_CORRUPT_JS);
+
+   b = bson_new_from_json ((uint8_t *)"1", 1, NULL);
+   assert (!b);
+
+   b = bson_new_from_json ((uint8_t *)"*", 1, NULL);
+   assert (!b);
+
+   b = bson_new_from_json ((uint8_t *)"", 0, NULL);
+   assert (!b);
+
+   b = bson_new_from_json ((uint8_t *)"asdfasdf", -1, NULL);
+   assert (!b);
+
+   b = bson_new_from_json ((uint8_t *)"{\"a\":*}", -1, NULL);
+   assert (!b);
 }
 
 static ssize_t
