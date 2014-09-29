@@ -936,7 +936,7 @@ _bson_json_read_start_array (void *_ctx) /* IN */
 
       BASIC_YAJL_CB_BAIL_IF_NOT_NORMAL ("[");
 
-      STACK_PUSH_ARRAY (bson_append_array_begin (STACK_BSON_PARENT, key, (int)len,
+      STACK_PUSH_ARRAY (bson_append_array_begin (STACK_BSON_PARENT, key, len,
                                                  STACK_BSON_CHILD));
    }
 
