@@ -437,7 +437,7 @@ _bson_append_bson_begin (bson_t      *bson,        /* IN */
                 (child_type == BSON_TYPE_ARRAY));
    BSON_ASSERT (child);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -718,7 +718,7 @@ bson_append_array (bson_t       *bson,       /* IN */
    bson_return_val_if_fail (key, false);
    bson_return_val_if_fail (array, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -789,7 +789,7 @@ bson_append_binary (bson_t         *bson,       /* IN */
    bson_return_val_if_fail (key, false);
    bson_return_val_if_fail (binary, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -852,7 +852,7 @@ bson_append_bool (bson_t     *bson,       /* IN */
    bson_return_val_if_fail (bson, false);
    bson_return_val_if_fail (key, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -901,7 +901,7 @@ bson_append_code (bson_t     *bson,       /* IN */
    bson_return_val_if_fail (key, false);
    bson_return_val_if_fail (javascript, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -956,7 +956,7 @@ bson_append_code_with_scope (bson_t       *bson,         /* IN */
       return bson_append_code (bson, key, key_length, javascript);
    }
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1012,7 +1012,7 @@ bson_append_dbpointer (bson_t           *bson,       /* IN */
    bson_return_val_if_fail (collection, false);
    bson_return_val_if_fail (oid, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1064,7 +1064,7 @@ bson_append_document (bson_t       *bson,       /* IN */
    bson_return_val_if_fail (key, false);
    bson_return_val_if_fail (value, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1088,7 +1088,7 @@ bson_append_double (bson_t     *bson,
    bson_return_val_if_fail (bson, false);
    bson_return_val_if_fail (key, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1117,7 +1117,7 @@ bson_append_int32 (bson_t      *bson,
    bson_return_val_if_fail (bson, false);
    bson_return_val_if_fail (key, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1144,7 +1144,7 @@ bson_append_int64 (bson_t      *bson,
    bson_return_val_if_fail (bson, false);
    bson_return_val_if_fail (key, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1338,7 +1338,7 @@ bson_append_maxkey (bson_t     *bson,
    bson_return_val_if_fail (bson, false);
    bson_return_val_if_fail (key, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1360,7 +1360,7 @@ bson_append_minkey (bson_t     *bson,
    bson_return_val_if_fail (bson, false);
    bson_return_val_if_fail (key, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1382,7 +1382,7 @@ bson_append_null (bson_t     *bson,
    bson_return_val_if_fail (bson, false);
    bson_return_val_if_fail (key, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1406,7 +1406,7 @@ bson_append_oid (bson_t           *bson,
    bson_return_val_if_fail (key, false);
    bson_return_val_if_fail (value, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1433,7 +1433,7 @@ bson_append_regex (bson_t     *bson,
    bson_return_val_if_fail (bson, false);
    bson_return_val_if_fail (key, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1475,7 +1475,7 @@ bson_append_utf8 (bson_t     *bson,
       return bson_append_null (bson, key, key_length);
    }
 
-   if (BSON_UNLIKELY (key_length == SIZE_T_MAX)) {
+   if (BSON_UNLIKELY (key_length < 0)) {
       key_length = strlen (key);
    }
 
@@ -1513,7 +1513,7 @@ bson_append_symbol (bson_t     *bson,
       return bson_append_null (bson, key, key_length);
    }
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1566,7 +1566,7 @@ bson_append_timestamp (bson_t       *bson,
    bson_return_val_if_fail (bson, false);
    bson_return_val_if_fail (key, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1607,7 +1607,7 @@ bson_append_date_time (bson_t      *bson,
    bson_return_val_if_fail (bson, false);
    bson_return_val_if_fail (key, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
@@ -1650,7 +1650,7 @@ bson_append_undefined (bson_t     *bson,
    bson_return_val_if_fail (bson, false);
    bson_return_val_if_fail (key, false);
 
-   if (key_length == SIZE_T_MAX) {
+   if (key_length < 0) {
       key_length = strlen (key);
    }
 
