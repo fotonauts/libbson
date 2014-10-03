@@ -1463,7 +1463,7 @@ bson_append_utf8 (bson_t     *bson,
                   const char *key,
                   ssize_t     key_length,
                   const char *value,
-                  size_t      length)
+                  ssize_t     length)
 {
    static const uint8_t type = BSON_TYPE_UTF8;
    uint32_t length_le;
@@ -1479,7 +1479,7 @@ bson_append_utf8 (bson_t     *bson,
       key_length = strlen (key);
    }
 
-   if (BSON_UNLIKELY (length == SIZE_T_MAX)) {
+   if (BSON_UNLIKELY (length < 0)) {
       length = strlen (value);
    }
 
@@ -1501,7 +1501,7 @@ bson_append_symbol (bson_t     *bson,
                     const char *key,
                     ssize_t     key_length,
                     const char *value,
-                    size_t      length)
+                    ssize_t     length)
 {
    static const uint8_t type = BSON_TYPE_SYMBOL;
    uint32_t length_le;
@@ -1517,7 +1517,7 @@ bson_append_symbol (bson_t     *bson,
       key_length = strlen (key);
    }
 
-   if (length == SIZE_T_MAX) {
+   if (length < 0) {
       length = strlen (value);
    }
 
@@ -1598,8 +1598,8 @@ bson_append_now_utc (bson_t     *bson,
 bool
 bson_append_date_time (bson_t      *bson,
                        const char  *key,
-                       ssize_t     key_length,
-                       int64_t     value)
+                       ssize_t      key_length,
+                       int64_t      value)
 {
    static const uint8_t type = BSON_TYPE_DATE_TIME;
    uint64_t value_le;
@@ -2026,7 +2026,7 @@ bson_copy_to (const bson_t *src,
    }
 
    data = _bson_data (src);
-   len = bson_next_power_of_two ((size_t)src->len);
+   len = bson_next_power_of_two (src->len);
 
    adst = (bson_impl_alloc_t *)dst;
    adst->flags = BSON_FLAG_STATIC;

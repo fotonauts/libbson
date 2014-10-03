@@ -484,7 +484,7 @@ bson_array_as_json (const bson_t *bson,
 bool
 bson_append_value (bson_t             *bson,
                    const char         *key,
-                   size_t              key_length,
+                   ssize_t             key_length,
                    const bson_value_t *value);
 
 
@@ -836,7 +836,7 @@ bson_append_null (bson_t     *bson,
 bool
 bson_append_oid (bson_t           *bson,
                  const char       *key,
-                 ssize_t          key_length,
+                 ssize_t           key_length,
                  const bson_oid_t *oid);
 
 
@@ -891,7 +891,7 @@ bson_append_utf8 (bson_t     *bson,
                   const char *key,
                   ssize_t     key_length,
                   const char *value,
-                  size_t      length);
+                  ssize_t     length);
 
 
 /**
@@ -913,7 +913,7 @@ bson_append_symbol (bson_t     *bson,
                     const char *key,
                     ssize_t     key_length,
                     const char *value,
-                    size_t      length);
+                    ssize_t     length);
 
 
 /**
