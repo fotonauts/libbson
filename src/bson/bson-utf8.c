@@ -262,7 +262,7 @@ bson_utf8_validate (const char *utf8,       /* IN */
 
 char *
 bson_utf8_escape_for_json (const char *utf8,     /* IN */
-                           size_t      utf8_len) /* IN */
+                           ssize_t     utf8_len) /* IN */
 {
    bson_unichar_t c;
    bson_string_t *str;

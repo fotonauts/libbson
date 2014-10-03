@@ -420,7 +420,7 @@ _bson_append (bson_t        *bson,        /* IN */
 static bool
 _bson_append_bson_begin (bson_t      *bson,        /* IN */
                          const char  *key,         /* IN */
-                         size_t       key_length,  /* IN */
+                         ssize_t      key_length,  /* IN */
                          bson_type_t  child_type,  /* IN */
                          bson_t      *child)       /* OUT */
 {
