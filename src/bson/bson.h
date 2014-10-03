@@ -195,7 +195,7 @@ bson_new_from_json (const uint8_t *data,
 bool
 bson_init_from_json (bson_t        *bson,
                      const char    *data,
-                     size_t         len,
+                     ssize_t        len,
                      bson_error_t  *error);
 
 
@@ -503,7 +503,7 @@ bson_append_value (bson_t             *bson,
 bool
 bson_append_array (bson_t       *bson,
                    const char   *key,
-                   size_t        key_length,
+                   ssize_t       key_length,
                    const bson_t *array);
 
 
@@ -522,7 +522,7 @@ bson_append_array (bson_t       *bson,
 bool
 bson_append_binary (bson_t         *bson,
                     const char     *key,
-                    size_t          key_length,
+                    ssize_t         key_length,
                     bson_subtype_t  subtype,
                     const uint8_t  *binary,
                     size_t          length);

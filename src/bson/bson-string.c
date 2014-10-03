@@ -292,7 +292,7 @@ bson_string_append_printf (bson_string_t *string,
 
 void
 bson_string_truncate (bson_string_t *string, /* IN */
-                      uint32_t       len)    /* IN */
+                      size_t         len)    /* IN */
 {
    size_t alloc;
 

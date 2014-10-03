@@ -1273,7 +1273,7 @@ bson_new_from_json (const uint8_t *data,  /* IN */
 bool
 bson_init_from_json (bson_t       *bson,  /* OUT */
                      const char   *data,  /* IN */
-                     size_t       len,    /* IN */
+                     ssize_t      len,    /* IN */
                      bson_error_t *error) /* OUT */
 {
    bson_json_reader_t *reader;

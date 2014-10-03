@@ -2963,7 +2963,7 @@ bson_concat (bson_t       *dst,
 
    if (!bson_empty (src)) {
       return _bson_append (dst, 1, src->len - 5,
-                           (size_t) (src->len - 5), _bson_data (src) + 4);
+                           src->len - 5, _bson_data (src) + 4);
    }
 
    return true;
