@@ -576,7 +576,7 @@ _bson_append_bson_end (bson_t *bson,   /* IN */
 bool
 bson_append_array_begin (bson_t     *bson,         /* IN */
                          const char *key,          /* IN */
-                         size_t      key_length,   /* IN */
+                         ssize_t     key_length,   /* IN */
                          bson_t     *child)        /* IN */
 {
    bson_return_val_if_fail (bson, false);
@@ -645,7 +645,7 @@ bson_append_array_end (bson_t *bson,   /* IN */
 bool
 bson_append_document_begin (bson_t     *bson,         /* IN */
                             const char *key,          /* IN */
-                            size_t      key_length,   /* IN */
+                            ssize_t     key_length,   /* IN */
                             bson_t     *child)        /* IN */
 {
    bson_return_val_if_fail (bson, false);
@@ -709,7 +709,7 @@ bson_append_document_end (bson_t *bson,   /* IN */
 bool
 bson_append_array (bson_t       *bson,       /* IN */
                    const char   *key,        /* IN */
-                   size_t        key_length, /* IN */
+                   ssize_t       key_length, /* IN */
                    const bson_t *array)      /* IN */
 {
    static const uint8_t type = BSON_TYPE_ARRAY;
@@ -775,7 +775,7 @@ bson_append_array (bson_t       *bson,       /* IN */
 bool
 bson_append_binary (bson_t         *bson,       /* IN */
                     const char     *key,        /* IN */
-                    size_t          key_length, /* IN */
+                    ssize_t         key_length, /* IN */
                     bson_subtype_t  subtype,    /* IN */
                     const uint8_t  *binary,     /* IN */
                     size_t          length)     /* IN */
@@ -843,7 +843,7 @@ bson_append_binary (bson_t         *bson,       /* IN */
 bool
 bson_append_bool (bson_t     *bson,       /* IN */
                   const char *key,        /* IN */
-                  size_t      key_length, /* IN */
+                  ssize_t     key_length, /* IN */
                   bool        value)      /* IN */
 {
    static const uint8_t type = BSON_TYPE_BOOL;
@@ -890,7 +890,7 @@ bson_append_bool (bson_t     *bson,       /* IN */
 bool
 bson_append_code (bson_t     *bson,       /* IN */
                   const char *key,        /* IN */
-                  size_t      key_length, /* IN */
+                  ssize_t     key_length, /* IN */
                   const char *javascript) /* IN */
 {
    static const uint8_t type = BSON_TYPE_CODE;
@@ -938,7 +938,7 @@ bson_append_code (bson_t     *bson,       /* IN */
 bool
 bson_append_code_with_scope (bson_t       *bson,         /* IN */
                              const char   *key,          /* IN */
-                             size_t        key_length,   /* IN */
+                             ssize_t       key_length,   /* IN */
                              const char   *javascript,   /* IN */
                              const bson_t *scope)        /* IN */
 {
@@ -999,7 +999,7 @@ bson_append_code_with_scope (bson_t       *bson,         /* IN */
 bool
 bson_append_dbpointer (bson_t           *bson,       /* IN */
                        const char       *key,        /* IN */
-                       size_t            key_length, /* IN */
+                       ssize_t           key_length, /* IN */
                        const char       *collection, /* IN */
                        const bson_oid_t *oid)
 {
@@ -1055,7 +1055,7 @@ bson_append_dbpointer (bson_t           *bson,       /* IN */
 bool
 bson_append_document (bson_t       *bson,       /* IN */
                       const char   *key,        /* IN */
-                      size_t        key_length, /* IN */
+                      ssize_t       key_length, /* IN */
                       const bson_t *value)      /* IN */
 {
    static const uint8_t type = BSON_TYPE_DOCUMENT;
@@ -1080,7 +1080,7 @@ bson_append_document (bson_t       *bson,       /* IN */
 bool
 bson_append_double (bson_t     *bson,
                     const char *key,
-                    size_t      key_length,
+                    ssize_t     key_length,
                     double      value)
 {
    static const uint8_t type = BSON_TYPE_DOUBLE;
@@ -1108,7 +1108,7 @@ bson_append_double (bson_t     *bson,
 bool
 bson_append_int32 (bson_t      *bson,
                    const char  *key,
-                   size_t       key_length,
+                   ssize_t      key_length,
                    int32_t      value)
 {
    static const uint8_t type = BSON_TYPE_INT32;
@@ -1135,7 +1135,7 @@ bson_append_int32 (bson_t      *bson,
 bool
 bson_append_int64 (bson_t      *bson,
                    const char  *key,
-                   size_t       key_length,
+                   ssize_t      key_length,
                    int64_t      value)
 {
    static const uint8_t type = BSON_TYPE_INT64;
@@ -1162,7 +1162,7 @@ bson_append_int64 (bson_t      *bson,
 bool
 bson_append_iter (bson_t            *bson,
                   const char        *key,
-                  size_t             key_length,
+                  ssize_t            key_length,
                   const bson_iter_t *iter)
 {
    bool ret = false;
@@ -1331,7 +1331,7 @@ bson_append_iter (bson_t            *bson,
 bool
 bson_append_maxkey (bson_t     *bson,
                     const char *key,
-                    size_t      key_length)
+                    ssize_t     key_length)
 {
    static const uint8_t type = BSON_TYPE_MAXKEY;
 
@@ -1353,7 +1353,7 @@ bson_append_maxkey (bson_t     *bson,
 bool
 bson_append_minkey (bson_t     *bson,
                     const char *key,
-                    size_t      key_length)
+                    ssize_t     key_length)
 {
    static const uint8_t type = BSON_TYPE_MINKEY;
 
@@ -1375,7 +1375,7 @@ bson_append_minkey (bson_t     *bson,
 bool
 bson_append_null (bson_t     *bson,
                   const char *key,
-                  size_t      key_length)
+                  ssize_t     key_length)
 {
    static const uint8_t type = BSON_TYPE_NULL;
 
@@ -1397,7 +1397,7 @@ bson_append_null (bson_t     *bson,
 bool
 bson_append_oid (bson_t           *bson,
                  const char       *key,
-                 size_t            key_length,
+                 ssize_t           key_length,
                  const bson_oid_t *value)
 {
    static const uint8_t type = BSON_TYPE_OID;
@@ -1422,7 +1422,7 @@ bson_append_oid (bson_t           *bson,
 bool
 bson_append_regex (bson_t     *bson,
                    const char *key,
-                   size_t      key_length,
+                   ssize_t     key_length,
                    const char *regex,
                    const char *options)
 {
@@ -1461,7 +1461,7 @@ bson_append_regex (bson_t     *bson,
 bool
 bson_append_utf8 (bson_t     *bson,
                   const char *key,
-                  size_t      key_length,
+                  ssize_t     key_length,
                   const char *value,
                   size_t      length)
 {
@@ -1499,7 +1499,7 @@ bson_append_utf8 (bson_t     *bson,
 bool
 bson_append_symbol (bson_t     *bson,
                     const char *key,
-                    size_t      key_length,
+                    ssize_t     key_length,
                     const char *value,
                     size_t      length)
 {
@@ -1537,7 +1537,7 @@ bson_append_symbol (bson_t     *bson,
 bool
 bson_append_time_t (bson_t     *bson,
                     const char *key,
-                    size_t      key_length,
+                    ssize_t     key_length,
                     time_t      value)
 {
 #ifdef BSON_OS_WIN32
@@ -1556,7 +1556,7 @@ bson_append_time_t (bson_t     *bson,
 bool
 bson_append_timestamp (bson_t       *bson,
                        const char   *key,
-                       size_t        key_length,
+                       ssize_t       key_length,
                        uint32_t timestamp,
                        uint32_t increment)
 {
@@ -1585,7 +1585,7 @@ bson_append_timestamp (bson_t       *bson,
 bool
 bson_append_now_utc (bson_t     *bson,
                      const char *key,
-                     size_t      key_length)
+                     ssize_t     key_length)
 {
    bson_return_val_if_fail (bson, false);
    bson_return_val_if_fail (key, false);
@@ -1598,7 +1598,7 @@ bson_append_now_utc (bson_t     *bson,
 bool
 bson_append_date_time (bson_t      *bson,
                        const char  *key,
-                       size_t      key_length,
+                       ssize_t     key_length,
                        int64_t     value)
 {
    static const uint8_t type = BSON_TYPE_DATE_TIME;
@@ -1625,7 +1625,7 @@ bson_append_date_time (bson_t      *bson,
 bool
 bson_append_timeval (bson_t         *bson,
                      const char     *key,
-                     size_t          key_length,
+                     ssize_t         key_length,
                      struct timeval *value)
 {
    uint64_t unix_msec;
@@ -1643,7 +1643,7 @@ bson_append_timeval (bson_t         *bson,
 bool
 bson_append_undefined (bson_t     *bson,
                        const char *key,
-                       size_t      key_length)
+                       ssize_t     key_length)
 {
    static const uint8_t type = BSON_TYPE_UNDEFINED;
 
@@ -1665,7 +1665,7 @@ bson_append_undefined (bson_t     *bson,
 bool
 bson_append_value (bson_t             *bson,
                    const char         *key,
-                   size_t              key_length,
+                   ssize_t             key_length,
                    const bson_value_t *value)
 {
    bson_t local;
