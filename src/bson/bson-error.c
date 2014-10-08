@@ -118,7 +118,7 @@ bson_strerror_r (int     err_code,  /* IN */
 #endif
 
    if (!ret) {
-      memcpy (buf, unknown_msg, MIN (buflen, strlen (unknown_msg)));
+      memcpy (buf, unknown_msg, MIN (buflen, strlen (unknown_msg) + 1));
       buf [buflen - 1] = '\0';
       ret = buf;
    }
