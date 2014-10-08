@@ -1368,7 +1368,7 @@ bson_json_reader_t *
 bson_json_reader_new_from_file (const char   *path,  /* IN */
                                 bson_error_t *error) /* OUT */
 {
-   char errmsg[32];
+   char errmsg[64];
    int fd = -1;
 
    bson_return_val_if_fail (path, NULL);
