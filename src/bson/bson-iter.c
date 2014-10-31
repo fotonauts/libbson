@@ -733,7 +733,7 @@ mark_invalid:
 void
 bson_iter_binary (const bson_iter_t  *iter,        /* IN */
                   bson_subtype_t     *subtype,     /* OUT */
-                  uint32_t           *binary_len,  /* OUT */
+                  size_t             *binary_len,  /* OUT */
                   const uint8_t     **binary)      /* OUT */
 {
    bson_subtype_t backup;
@@ -1763,7 +1763,7 @@ bson_iter_visit_all (bson_iter_t          *iter,    /* INOUT */
          {
             const uint8_t *binary = NULL;
             bson_subtype_t subtype = BSON_SUBTYPE_BINARY;
-            uint32_t binary_len = 0;
+            size_t binary_len = 0;
 
             bson_iter_binary (iter, &subtype, &binary_len, &binary);
 

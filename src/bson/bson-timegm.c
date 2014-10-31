@@ -173,8 +173,6 @@ static time_t const time_t_max =
 #define WILDABBR	"   "
 #endif /* !defined WILDABBR */
 
-static const char	wildabbr[] = WILDABBR;
-
 static const char	gmt[] = "GMT";
 
 struct ttinfo {				/* time type information */
@@ -373,7 +371,7 @@ timesub(const time_t *const timep, const int_fast32_t offset,
 		if (! ((! TYPE_SIGNED(time_t) || INT_MIN <= tdelta)
 		       && tdelta <= INT_MAX))
 			return NULL;
-		idelta = tdelta;
+		idelta = (int)tdelta;
 		if (idelta == 0)
 			idelta = (tdays < 0) ? -1 : 1;
 		newy = y;
@@ -388,14 +386,14 @@ timesub(const time_t *const timep, const int_fast32_t offset,
 	{
 		register int_fast32_t	seconds;
 
-		seconds = tdays * SECSPERDAY;
+		seconds = (int_fast32_t)(tdays * SECSPERDAY);
 		tdays = seconds / SECSPERDAY;
 		rem += seconds - tdays * SECSPERDAY;
 	}
 	/*
 	** Given the range, we can now fearlessly cast...
 	*/
-	idays = tdays;
+	idays = (int)tdays;
 	rem += offset - corr;
 	while (rem < 0) {
 		rem += SECSPERDAY;

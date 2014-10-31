@@ -129,7 +129,7 @@ bson_iter_array (const bson_iter_t   *iter,
 void
 bson_iter_binary (const bson_iter_t   *iter,
                   bson_subtype_t      *subtype,
-                  uint32_t            *binary_len,
+                  size_t              *binary_len,
                   const uint8_t      **binary);
 
 

@@ -274,7 +274,7 @@ typedef struct _bson_value_t
       } v_doc;
       struct {
          uint8_t        *data;
-         uint32_t        data_len;
+         size_t          data_len;
          bson_subtype_t  subtype;
       } v_binary;
       struct {

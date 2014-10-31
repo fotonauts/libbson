@@ -1222,7 +1222,7 @@ bson_append_iter (bson_t            *bson,
       {
          const uint8_t *binary = NULL;
          bson_subtype_t subtype = BSON_SUBTYPE_BINARY;
-         uint32_t len = 0;
+         size_t len = 0;
 
          bson_iter_binary (iter, &subtype, &len, &binary);
          ret = bson_append_binary (bson, key, key_length,

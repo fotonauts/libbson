@@ -99,7 +99,7 @@ typedef union bcon_append {
    {
       bson_subtype_t subtype;
       uint8_t  *binary;
-      uint32_t  length;
+      size_t    length;
    } BIN;
 
    bson_oid_t    *OID;
@@ -155,7 +155,7 @@ typedef union bcon_extract {
    {
       bson_subtype_t      *subtype;
       const uint8_t      **binary;
-      uint32_t            *length;
+      size_t              *length;
    } BIN;
 
    const bson_oid_t **OID;
@@ -490,7 +490,7 @@ _bcon_append_tokenize (va_list       *ap,
       case BCON_TYPE_BIN:
          u->BIN.subtype = va_arg (*ap, bson_subtype_t);
          u->BIN.binary = va_arg (*ap, uint8_t *);
-         u->BIN.length = va_arg (*ap, uint32_t);
+         u->BIN.length = va_arg (*ap, size_t);
          break;
       case BCON_TYPE_UNDEFINED:
          break;
@@ -620,7 +620,7 @@ _bcon_extract_tokenize (va_list        *ap,
       case BCON_TYPE_BIN:
          u->BIN.subtype = va_arg (*ap, bson_subtype_t *);
          u->BIN.binary = va_arg (*ap, const uint8_t * *);
-         u->BIN.length = va_arg (*ap, uint32_t *);
+         u->BIN.length = va_arg (*ap, size_t *);
          break;
       case BCON_TYPE_UNDEFINED:
          break;
