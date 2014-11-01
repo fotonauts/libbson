@@ -144,7 +144,7 @@ static void
 test_bson_iter_binary_deprecated (void)
 {
    bson_subtype_t subtype;
-   uint32_t binary_len;
+   size_t binary_len;
    const uint8_t * binary;
    bson_iter_t iter;
    bson_t * b;
