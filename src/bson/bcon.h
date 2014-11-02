@@ -56,6 +56,8 @@ BCON_ENSURE_DECLARE (int32, int32_t)
 BCON_ENSURE_DECLARE (int32_ptr, int32_t *)
 BCON_ENSURE_DECLARE (int64, int64_t)
 BCON_ENSURE_DECLARE (int64_ptr, int64_t *)
+BCON_ENSURE_DECLARE (size_t, size_t)
+BCON_ENSURE_DECLARE (size_t_ptr, size_t *)
 BCON_ENSURE_DECLARE (bool, bool)
 BCON_ENSURE_DECLARE (bool_ptr, bool *)
 BCON_ENSURE_DECLARE (bson_type, bson_type_t)
@@ -74,7 +76,7 @@ BCON_ENSURE_DECLARE (const_bson_iter_ptr, const bson_iter_t *)
    BCON_MAGIC, BCON_TYPE_BIN, \
    BCON_ENSURE (subtype, (_subtype)), \
    BCON_ENSURE (const_uint8_ptr, (_binary)), \
-   BCON_ENSURE (uint32, (_length))
+   BCON_ENSURE (size_t, (_length))
 #define BCON_UNDEFINED BCON_MAGIC, BCON_TYPE_UNDEFINED
 #define BCON_OID(_val) \
    BCON_MAGIC, BCON_TYPE_OID, BCON_ENSURE (const_oid_ptr, (_val))
@@ -126,7 +128,7 @@ BCON_ENSURE_DECLARE (const_bson_iter_ptr, const bson_iter_t *)
    BCONE_MAGIC, BCON_TYPE_BIN, \
    BCON_ENSURE_STORAGE (subtype_ptr, (subtype)), \
    BCON_ENSURE_STORAGE (const_uint8_ptr_ptr, (binary)), \
-   BCON_ENSURE_STORAGE (uint32_ptr, (length))
+   BCON_ENSURE_STORAGE (size_t_ptr, (length))
 #define BCONE_UNDEFINED BCONE_MAGIC, BCON_TYPE_UNDEFINED
 #define BCONE_OID(_val) BCONE_MAGIC, BCON_TYPE_OID, \
    BCON_ENSURE_STORAGE (const_oid_ptr_ptr, (_val))

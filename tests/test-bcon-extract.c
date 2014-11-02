@@ -35,7 +35,7 @@ static void
 test_binary (void)
 {
    bson_subtype_t subtype;
-   uint32_t len;
+   size_t len;
    const uint8_t *binary;
 
    bson_t *bcon = BCON_NEW (
