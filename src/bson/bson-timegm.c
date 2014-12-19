@@ -174,7 +174,7 @@ static time_t const time_t_max =
 #endif /* !defined WILDABBR */
 
 #ifdef TM_ZONE
-static const char      wildabbr[] = WILDABBR;
+static const char	wildabbr[] = WILDABBR;
 #endif
 
 static const char	gmt[] = "GMT";
