@@ -1360,7 +1360,7 @@ _bson_json_reader_handle_fd_destroy (void *handle) /* IN */
 static ssize_t
 _bson_json_reader_handle_fd_read (void    *handle, /* IN */
                                   uint8_t *buf,    /* IN */
-                                  size_t   len)    /* IN */
+                                  size_t   len)   /* IN */
 {
    bson_json_reader_handle_fd_t *fd = handle;
    ssize_t ret = -1;
